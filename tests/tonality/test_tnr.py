@@ -15,17 +15,15 @@ except ImportError:
 
 
 # Local application imports
-from mosqito.utils import load
-from mosqito.sq_metrics import (
-    tone_to_noise_ecma,
-)
+from mosqito.functions.shared.load import load
+from mosqito.functions.tonality_tnr_pr.comp_tnr import comp_tnr
 
 
 @pytest.mark.tnr  # to skip or run PR test
-def test_tnr_ecma():
+def test_tnr():
     """Test function for the prominence ratio calculation of an audio signal
 
-    Validation function for the Audio_signal class "tone_to_noise_ecma" method with signal array
+    Validation function for the Audio_signal class "comp_tnr" method with signal array
     as input. The input signals are generated using audacity.
 
     Parameters
@@ -45,14 +43,14 @@ def test_tnr_ecma():
         {
             "is_stationary": True,
             "tones freq": [200, 2000],
-            "data_file": "tests/input/white_noise_442_1768_Hz_stationary.wav",
+            "data_file": r"tests\input\white_noise_442_1768_Hz_stationary.wav",
         }
     )
 
     signal.append(
         {
             "is_stationary": False,
-            "data_file": "tests/input/white_noise_442_1768_Hz_varying.wav",
+            "data_file": r"tests\input\white_noise_442_1768_Hz_varying.wav",
         }
     )
 
@@ -60,8 +58,4 @@ def test_tnr_ecma():
         # Load signal
         audio, fs = load(signal[i]["data_file"])
         # Compute tone-to-noise ratio
-        tnr = tone_to_noise_ecma(signal[i]["is_stationary"], audio, fs, prominence=True)
-
-
-if __name__ == "__main__":
-    test_tnr_ecma()
+        tnr = comp_tnr(signal[i]["is_stationary"], audio, fs, prominence=True)
