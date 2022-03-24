@@ -15,15 +15,15 @@ except ImportError:
 
 
 # Local application imports
-from mosqito.functions.shared.load import load
-from mosqito.functions.tonality_tnr_pr.comp_pr import comp_pr
+from mosqito.utils import load
+from mosqito.sq_metrics import prominence_ratio_ecma
 
 
 @pytest.mark.pr  # to skip or run PR test
-def test_pr():
+def test_pr_ecma():
     """Test function for the prominence ratio calculation of an audio signal
 
-    Validation function for the Audio_signal class "comp_tnr" method with signal array
+    Validation function for the Audio_signal class "tone_to_noise_ecma" method with signal array
     as input. The input signals are generated using audacity.
 
     Parameters
@@ -42,14 +42,14 @@ def test_pr():
     signal.append(
         {
             "is_stationary": True,
-            "data_file": r"tests\input\white_noise_442_1768_Hz_stationary.wav",
+            "data_file": "tests/input/white_noise_442_1768_Hz_stationary.wav",
         }
     )
 
     signal.append(
         {
             "is_stationary": False,
-            "data_file": r"tests\input\white_noise_442_1768_Hz_varying.wav",
+            "data_file": "tests/input/white_noise_442_1768_Hz_varying.wav",
         }
     )
 
@@ -57,8 +57,10 @@ def test_pr():
         # Load signal
         audio, fs = load(signal[i]["data_file"])
         # Compute tone-to-noise ratio
-        pr = comp_pr(signal[i]["is_stationary"], audio, fs, prominence=True)
+        pr = prominence_ratio_ecma(
+            signal[i]["is_stationary"], audio, fs, prominence=True
+        )
 
 
 if __name__ == "__main__":
-    test_pr()
+    test_pr_ecma()
